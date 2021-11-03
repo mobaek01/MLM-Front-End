@@ -11,3 +11,37 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+header{
+   display: flex;
+   flex-direction: row;
+   align-items: baseline;
+   border-bottom: 1px solid grey;
+   padding-left: 2em;
+}
+
+header li{
+   list-style: none;
+   display: inline;
+   margin: 1em;
+}
+
+.content{
+   display: flex;
+   flex-direction: row;
+}
+
+.left{
+   display: flex;
+   flex-direction: column;
+   width: 60vw;
+}
+
+.right{
+
+}
+
+.card{
+   border-bottom: 1px solid grey;
+   padding-left: 2em;
+}
