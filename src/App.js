@@ -15,6 +15,7 @@ const App = () => {
    const [ targetMessage, settargetMessage ] = useState('')
 
 
+
    const updateAuthor = (event) => {
       setcreatedAuthor(event.target.value)
       settargetAuthor(event.target.value)
@@ -68,6 +69,7 @@ const App = () => {
          {
             username:createdAuthor||targetAuthor,//if there was nothing typed in the input, use previous value
             message:createdMessage||targetMessage,
+            editOn:false
          }
       ).then(() => {
          axios
@@ -81,9 +83,26 @@ const App = () => {
 
    const handleEditButton = (message) => {
       settargetId(message._id)
-      editOn===true?(seteditOn(false)):(seteditOn(true))
+      editOn?seteditOn(false):seteditOn(true)
       settargetAuthor(message.username)
       settargetMessage(message.message)
+      axios.put(`http://localhost:3001/chatrooms/${message._id}`,
+         {
+            editOn:editOn
+         }
+      ).then(() => {
+         axios
+            .get('http://localhost:3001/chatrooms')
+            .then((response) => {
+               // console.log(response);
+               setMessages(response.data)
+            })
+      })
+   }
+
+
+   const handleLike = (message) => {
+
    }
 
    return(
@@ -105,22 +124,21 @@ const App = () => {
                            <h5>{message.username}</h5>
                         </div>
                         <div className='cardBody'>
-                        { message.editOn?
+                        { message.editOn===true?
                            (<div id="editForm">
-                              <h4>Edit</h4>
                               <form onSubmit={handleEditForm}>
-                                 Username: <input type='text' onChange={updateAuthor} value={targetAuthor}/><br/>
                                  <textarea onChange={updateMessage} value={targetMessage}/><br/>
                                  <input type='submit' value='send'/>
                               </form>
                            </div>):
                            (<p>{message.message}</p>)
                         }
-
                         </div>
                         <div className='cardLower'>
                            <p>(timestamp here)</p>
-                           <button>Like</button>
+                           <button onClick={(event) => {
+                              handleLike(message)
+                           }}>Like</button>
                            <button onClick={ (event) => {
                               handleDelete(message)
                            } }>Delete
