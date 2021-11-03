@@ -61,7 +61,7 @@ const App = () => {
    return(
       <main>
          <header>
-            <h1>test 2</h1>
+            <h1>MLM</h1>
             <ul>
                <li>Login</li>
                <li>Register</li>
