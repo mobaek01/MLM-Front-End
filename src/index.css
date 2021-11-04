@@ -16,8 +16,22 @@ header{
    display: flex;
    flex-direction: row;
    align-items: baseline;
+   justify-content: space-between;
    border-bottom: 1px solid grey;
    padding-left: 2em;
+   padding-right: 2em;
+   width: 100vw;
+   position: fixed;
+   background-color: white;
+}
+
+header h1 {
+   margin-bottom: .5em;
+}
+
+header ul{
+   margin-right: 4em;
+   margin-bottom: .5em;
 }
 
 header li{
@@ -29,12 +43,14 @@ header li{
 .content{
    display: flex;
    flex-direction: row;
+   padding-top: 7em;
+   padding-bottom: 13em;
 }
 
 .left{
    display: flex;
    flex-direction: column;
-   width: 60vw;
+   width: 75vw;
 }
 
 .right{
@@ -50,4 +66,51 @@ footer{
    display: flex;
    flex-direction: column;
    align-items: baseline;
+   padding-left: 2em;
+   position: fixed;
+   bottom: 0;
+   background-color: white;
+   width: 100vw;
+   border-top: 1px solid grey;
+   padding-bottom: 1em;
+}
+
+.cardLower img{
+   width:1.1em;
+   height: 1.1em;
+}
+
+.cardLower {
+   display: flex;
+   flex-direction: row;
+   align-items: baseline;
+   justify-content: flex-end;
+}
+
+.cardLower >*{
+   margin: 1em;
+}
+
+.cardTop{
+   display: flex;
+   flex-direction: row;
+   align-items: baseline;
+}
+
+.cardTop>*{
+   margin-right: 1em;
+}
+
+.sendMsg input[type='submit']{
+   margin-left: 94%;
+}
+
+.sendMsg textarea{
+   width: 85vw;
+   height: 3em;
+   margin-top: .5em;
+}
+
+.card h5{
+   margin-bottom: 0;
 }
