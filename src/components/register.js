@@ -35,7 +35,7 @@ const Register = () => {
          <h4>Make an account</h4>
          <form onSubmit={handleRegistration}>
             Username: <input type='text' onChange={updatenewUser}/><br/>
-            Password: <input type='text' onChange={updatenewPassword}/><br/>
+            Password: <input type='password' onChange={updatenewPassword}/><br/>
             <input type='submit'/>
          </form>
       </>
