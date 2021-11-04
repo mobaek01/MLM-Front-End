@@ -5,6 +5,8 @@ import axios from 'axios'
 const Register = () => {
    const [ newUser, setnewUser] = useState('')
    const [ newPassword, setnewPassword ] = useState('')
+
+//---------------take the credentials from form input--------------------
    const updatenewUser = (event) => {
       setnewUser(event.target.value)
    }
@@ -12,7 +14,7 @@ const Register = () => {
    const updatenewPassword = (event) => {
       setnewPassword(event.target.value)
    }
-
+//---------------on form submit--------------------------------
    const handleRegistration = (event) => {
       setnewUser(event)
       axios.post(`http://localhost:3001/users`,
@@ -24,7 +26,6 @@ const Register = () => {
          axios
             .get('http://localhost:3001/')
             .then((response) => {
-               // console.log(response);
                console.log(response);
             })
       })
