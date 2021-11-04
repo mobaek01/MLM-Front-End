@@ -1,6 +1,8 @@
 import './App.css';
 import {useState, useEffect} from 'react'
 import axios from 'axios'
+import Register from './components/register.js'
+import Login from './components/login.js'
 
 
 const App = () => {
@@ -83,7 +85,7 @@ const App = () => {
 
    const handleEditButton = (message) => {
       settargetId(message._id)
-      editOn?seteditOn(false):seteditOn(true)
+      editOn?seteditOn(false):seteditOn(true)//edit button is a toggle
       settargetAuthor(message.username)
       settargetMessage(message.message)
       axios.put(`http://localhost:3001/chatrooms/${message._id}`,
@@ -99,10 +101,11 @@ const App = () => {
             })
       })
    }
+//=======----User-Registartion----===============
 
 
+//____________________________________________________________
    const handleLike = (message) => {
-
    }
 
    return(
@@ -151,7 +154,8 @@ const App = () => {
                })}
             </div>
             <div className='right'>
-
+               <Register/>
+               <Login />
             </div>
          </div>
          <footer>
