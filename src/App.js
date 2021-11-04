@@ -122,6 +122,7 @@ const App = () => {
                      <div key={message._id} className="card">
                         <div className='cardTop'>
                            <h5>{message.username}</h5>
+                           <p>(timestamp here)</p>
                         </div>
                         <div className='cardBody'>
                         { message.editOn===true?
@@ -135,18 +136,15 @@ const App = () => {
                         }
                         </div>
                         <div className='cardLower'>
-                           <p>(timestamp here)</p>
-                           <button onClick={(event) => {
+                           <img src='./like.png' onClick={(event) => {
                               handleLike(message)
-                           }}>Like</button>
-                           <button onClick={ (event) => {
-                              handleDelete(message)
-                           } }>Delete
-                           </button>
-                           <button onClick={ (event) => {
+                           }}/>
+                           <img src='./pencil.svg' onClick={ (event) => {
                               handleEditButton(message)
-                              } }>Edit
-                           </button>
+                           } }/>
+                           <img src='./xthin.png'  onClick={ (event) => {
+                              handleDelete(message)
+                           } }/>
                         </div>
                      </div>
                   )
@@ -158,8 +156,8 @@ const App = () => {
          </div>
          <footer>
          <h4>Send a message...</h4>
-         <form onSubmit={handleSendBtn}>
-            Username: <input type='text' onChange={updateAuthor}/><br/>
+         <form className='sendMsg' onSubmit={handleSendBtn}>
+            Alias: <input type='text' onChange={updateAuthor}/><br/>
             <textarea onChange={updateMessage} /><br/>
             <input type='submit' value='send'/>
          </form>
