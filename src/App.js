@@ -8,14 +8,22 @@ const App = () => {
 
    const [ messages, setMessages ] = useState([])
    const [ createdAuthor, setcreatedAuthor ] = useState('')
-   const [ createdMessage, setcreatedMessage ] = useState('')
+   const [createdMessage, setcreatedMessage ] = useState('')
+   const [ targetId, settargetId ] = useState('')
+   const [ editOn, seteditOn ] = useState(false)
+   const [ targetAuthor, settargetAuthor ] = useState('')
+   const [ targetMessage, settargetMessage ] = useState('')
+
+
 
    const updateAuthor = (event) => {
       setcreatedAuthor(event.target.value)
+      settargetAuthor(event.target.value)
    }
 
    const updateMessage = (event) => {
       setcreatedMessage(event.target.value)
+      settargetMessage(event.target.value)
    }
 
    useEffect(() => {
@@ -55,13 +63,52 @@ const App = () => {
          })
    }
 
+   const handleEditForm = (event) => {
+      event.preventDefault()
+      axios.put(`http://localhost:3001/chatrooms/${targetId}`,
+         {
+            username:createdAuthor||targetAuthor,//if there was nothing typed in the input, use previous value
+            message:createdMessage||targetMessage,
+            editOn:false
+         }
+      ).then(() => {
+         axios
+            .get('http://localhost:3001/chatrooms')
+            .then((response) => {
+               // console.log(response);
+               setMessages(response.data)
+            })
+      })
+   }
+
    const handleEditButton = (message) => {
+      settargetId(message._id)
+      editOn?seteditOn(false):seteditOn(true)
+      settargetAuthor(message.username)
+      settargetMessage(message.message)
+      axios.put(`http://localhost:3001/chatrooms/${message._id}`,
+         {
+            editOn:editOn
+         }
+      ).then(() => {
+         axios
+            .get('http://localhost:3001/chatrooms')
+            .then((response) => {
+               // console.log(response);
+               setMessages(response.data)
+            })
+      })
+   }
+
+
+   const handleLike = (message) => {
+
    }
 
    return(
       <main>
          <header>
-            <h1>test 2</h1>
+            <h1>MLM</h1>
             <ul>
                <li>Login</li>
                <li>Register</li>
@@ -75,36 +122,45 @@ const App = () => {
                      <div key={message._id} className="card">
                         <div className='cardTop'>
                            <h5>{message.username}</h5>
+                           <p>(timestamp here)</p>
                         </div>
                         <div className='cardBody'>
-                           <p>{message.message}</p>
+                        { message.editOn===true?
+                           (<div id="editForm">
+                              <form onSubmit={handleEditForm}>
+                                 <textarea onChange={updateMessage} value={targetMessage}/><br/>
+                                 <input type='submit' value='send'/>
+                              </form>
+                           </div>):
+                           (<p>{message.message}</p>)
+                        }
                         </div>
                         <div className='cardLower'>
-                           <p>(timestamp here)</p>
-                           <button>Like</button>
-                           <button onClick={ (event) => {
-                              handleDelete(message)
-                           } }>Delete
-                           </button>
-                           <button onClick={ (event) => {
+                           <img src='./like.png' onClick={(event) => {
+                              handleLike(message)
+                           }}/>
+                           <img src='./pencil.svg' onClick={ (event) => {
                               handleEditButton(message)
-                              } }>Edit
-                           </button>
+                           } }/>
+                           <img src='./xthin.png'  onClick={ (event) => {
+                              handleDelete(message)
+                           } }/>
                         </div>
                      </div>
                   )
                })}
             </div>
             <div className='right'>
-               <h4>Send a message...</h4>
-               <form onSubmit={handleSendBtn}>
-                  Username: <input type='text' onChange={updateAuthor}/><br/>
-                  <input type='text-area' onChange={updateMessage} /><br/>
-                  <input type='submit' value='send'/>
-               </form>
+
             </div>
          </div>
          <footer>
+         <h4>Send a message...</h4>
+         <form className='sendMsg' onSubmit={handleSendBtn}>
+            Alias: <input type='text' onChange={updateAuthor}/><br/>
+            <textarea onChange={updateMessage} /><br/>
+            <input type='submit' value='send'/>
+         </form>
          </footer>
       </main>
    )
