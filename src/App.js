@@ -7,7 +7,6 @@ import Login from './components/login.js'
 
 const App = () => {
 
-
    const [ messages, setMessages ] = useState([])
    const [ createdAuthor, setcreatedAuthor ] = useState('')
    const [createdMessage, setcreatedMessage ] = useState('')
@@ -113,7 +112,8 @@ const App = () => {
          <header>
             <h1>MLM</h1>
             <ul>
-               <li>Login</li>
+                <li>Welcome</li>
+               <li>`Login`</li>
                <li>Register</li>
                <li>Friends</li>
             </ul>
