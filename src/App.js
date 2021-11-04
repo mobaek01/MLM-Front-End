@@ -8,7 +8,7 @@ const App = () => {
 
    const [ messages, setMessages ] = useState([])
    const [ createdAuthor, setcreatedAuthor ] = useState('')
-   const [createdMessage, setcreatedMessage ] = useState('')
+   const [ createdMessage, setcreatedMessage ] = useState('')
 
    const updateAuthor = (event) => {
       setcreatedAuthor(event.target.value)
