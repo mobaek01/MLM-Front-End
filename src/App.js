@@ -2,7 +2,7 @@ import './App.css';
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 import Register from './components/register.js'
-import Login from './components/login.js'
+import LoginForm from './components/login.js'
 
 
 const App = () => {
@@ -15,18 +15,6 @@ const App = () => {
    const [ editOn, seteditOn ] = useState(false)
    const [ targetAuthor, settargetAuthor ] = useState('')
    const [ targetMessage, settargetMessage ] = useState('')
-
-
-
-   const updateAuthor = (event) => {
-      setcreatedAuthor(event.target.value)
-      settargetAuthor(event.target.value)
-   }
-
-   const updateMessage = (event) => {
-      setcreatedMessage(event.target.value)
-      settargetMessage(event.target.value)
-   }
 
    useEffect(() => {
       axios
@@ -52,6 +40,7 @@ const App = () => {
             })
       })
    }
+//=============Delete message ====================
 
    const handleDelete = (message) => {
       axios
@@ -63,6 +52,15 @@ const App = () => {
                   setMessages(response.data)
                })
          })
+   }
+//============= Edit message  =================
+   const updateAuthor = (event) => {
+      setcreatedAuthor(event.target.value)
+      settargetAuthor(event.target.value)
+   }
+   const updateMessage = (event) => {
+      setcreatedMessage(event.target.value)
+      settargetMessage(event.target.value)
    }
 
    const handleEditForm = (event) => {
@@ -155,7 +153,7 @@ const App = () => {
             </div>
             <div className='right'>
                <Register/>
-               <Login />
+               <LoginForm />
             </div>
          </div>
          <footer>
