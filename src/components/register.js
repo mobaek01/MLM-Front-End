@@ -18,7 +18,7 @@ const Register = () => {
       axios.post(`http://localhost:3001/users`,
          {
             username:newUser,
-            message:newPassword,
+            password:newPassword,
          }
       ).then(() => {
          axios
