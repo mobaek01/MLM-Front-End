@@ -115,6 +115,10 @@ footer{
    margin-right: 1em;
 }
 
+.sendMsg {
+    padding-top: 2%;
+}
+
 .sendMsg input[type='submit']{
    margin-left: 94%;
    box-sizing: border-box;
