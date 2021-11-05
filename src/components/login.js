@@ -16,18 +16,27 @@ const LoginForm = ({setCurrentUser}) => {
       setPassword(event.target.value)
    }
 //-----------check credentials---------------------------------
-  const checkCred = (event) => {
+  const handleLogin = (event) => {
       event.preventDefault()
       setCurrentUser({username:username, password:password})
       axios
           .get(`http://localhost:3001/sessions/${username}/${password}`)
-          .then(console.log('checking credentials'))
+          .then(() => {
+              console.log('checking credentials');
+          })
+    axios
+        .post(`http://localhost:3001/sessions/${username}`)
+        .then(() => {
+            console.log('session created');
+        })
   }
+
+
 //---------------------------------------------------
    return (
       <>
          <h4>Log in</h4>
-         <form onSubmit={checkCred}>
+         <form onSubmit={handleLogin}>
             Username: <input type='text' onChange={inputUsername}/><br/>
             Password: <input type='password' onChange={inputPassword}/><br/>
             <input type='submit'/>

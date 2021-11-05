@@ -122,6 +122,22 @@ const App = () => {
         })
    }
 
+   const findsessionID = () => {
+
+   }
+
+   const handleLogout = () => {
+       axios.delete(`http://localhost:3001/sessions/${findsessionID()}`)
+           .then(() => {
+               axios
+               .get('http://localhost:3001/chatrooms')
+               .then((response) => {
+                  // console.log(response);
+                  setMessages(response.data)
+               })
+           })
+   }
+
    return(
       <main>
          <header>
