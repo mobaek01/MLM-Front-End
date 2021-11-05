@@ -16,18 +16,28 @@ const App = () => {
    const [ targetAuthor, settargetAuthor ] = useState('')
    const [ targetMessage, settargetMessage ] = useState('')
    const [ like, setLike ] = useState()
-   const [currentUser, setCurrentUser] = useState({username:"", password:""})
+   const [currentUser, setCurrentUser] = useState('')
+
+   const [loginAccepted, setLoginAccepted] = useState()
+
+
 
 
 //================= on load ===============
    useEffect(() => {
-      axios
+    axios
          .get('http://localhost:3001/chatrooms')
          .then((response) => {
             // console.log(response);
-            console.log(currentUser);
+            // console.log(response.data);
             setMessages(response.data)
-         })
+            })
+    axios
+        .get('http://localhost:3001/sessions')
+        .then((response) => {
+            // console.log(response.data[0].loginAccepted);
+            // setLoginAccepted(response.data[0].loginAccepted)
+        })
    },[])
 
 //==================Send Message Button=========
@@ -122,31 +132,51 @@ const App = () => {
         })
    }
 
-   const findsessionID = () => {
-
-   }
-
    const handleLogout = () => {
-       axios.delete(`http://localhost:3001/sessions/${findsessionID()}`)
-           .then(() => {
-               axios
-               .get('http://localhost:3001/chatrooms')
-               .then((response) => {
-                  // console.log(response);
-                  setMessages(response.data)
-               })
-           })
+       axios
+        .get('http://localhost:3001/sessions')
+        .then((response) => {
+            axios.delete(`http://localhost:3001/sessions/${response.data[0].name}`)
+                .then((response) => {
+                    axios
+                    .get('http://localhost:3001/chatrooms')
+                    .then((response) => {
+                        setMessages(response.data)
+                        setLoginAccepted(false)
+                    })
+                })
+        })
    }
+
+   // const handleLogout = () => {
+   //     axios
+   //      .get('http://localhost:3001/users')
+   //      .then((response) => {
+   //          axios
+   //          .put(`http://localhost:3001/users/logout/${response.data.username}`)
+   //          .then(() => {
+   //              console.log('you are logged out');
+   //          })
+   //      })
+   // }
 
    return(
       <main>
          <header>
             <h1>MLM</h1>
             <ul>
-                <li className="headerTitle">Welcome {currentUser.username}</li>
+            {loginAccepted ?
+                <>
+                <li className="headerTitle">Welcome {currentUser}</li>
+                <li><img id="logout" className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png" alt="" onClick={handleLogout}/></li>
+                <li><img className = "headerIcon" src = "https://cdn-icons.flaticon.com/png/512/880/premium/880543.png?token=exp=1636076955~hmac=56576c0ed7ab114c3007603f21651ec1" alt="" /></li>
+                </>
+            :
+                <>
                 <li><img className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png" alt="" /></li>
                 <li><img className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1277/1277010.png" alt="" /></li>
-                <li><img className = "headerIcon" src = "https://cdn-icons.flaticon.com/png/512/880/premium/880543.png?token=exp=1636076955~hmac=56576c0ed7ab114c3007603f21651ec1" alt="" /></li>
+                </>
+            }
             </ul>
          </header>
          <div className='content'>
@@ -193,7 +223,7 @@ const App = () => {
             </div>
             <div className='right'>
                <Register/>
-               <LoginForm setCurrentUser={setCurrentUser}/>
+               <LoginForm setCurrentUser={setCurrentUser} setLoginAccepted={setLoginAccepted}/>
                <Friend/>
             </div>
          </div>
