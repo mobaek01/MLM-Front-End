@@ -132,33 +132,33 @@ const App = () => {
         })
    }
 
-   // const handleLogout = () => {
-   //     axios
-   //      .get('http://localhost:3001/sessions')
-   //      .then((response) => {
-   //          axios.delete(`http://localhost:3001/sessions/${response.data[0].name}`)
-   //              .then((response) => {
-   //                  axios
-   //                  .get('http://localhost:3001/chatrooms')
-   //                  .then((response) => {
-   //                      setMessages(response.data)
-   //                      setLoginAccepted(false)
-   //                  })
-   //              })
-   //      })
-   // }
-
    const handleLogout = () => {
        axios
-        .get('http://localhost:3001/users')
+        .get('http://localhost:3001/sessions')
         .then((response) => {
-            axios
-            .put(`http://localhost:3001/users/logout/${response.data.username}`)
-            .then(() => {
-                console.log('you are logged out');
-            })
+            axios.delete(`http://localhost:3001/sessions/${response.data[0].name}`)
+                .then((response) => {
+                    axios
+                    .get('http://localhost:3001/chatrooms')
+                    .then((response) => {
+                        setMessages(response.data)
+                        setLoginAccepted(false)
+                    })
+                })
         })
    }
+
+   // const handleLogout = () => {
+   //     axios
+   //      .get('http://localhost:3001/users')
+   //      .then((response) => {
+   //          axios
+   //          .put(`http://localhost:3001/users/logout/${response.data.username}`)
+   //          .then(() => {
+   //              console.log('you are logged out');
+   //          })
+   //      })
+   // }
 
    return(
       <main>
