@@ -2,10 +2,12 @@ import React from 'react'
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 
+
 const LoginForm = ({setCurrentUser}) => {
 //------------take the credentials from form --------------------
    const [username, setUsername] = useState('')
    const [password, setPassword] = useState('')
+
 
    const inputUsername = (event) => {
      setUsername(event.target.value)
