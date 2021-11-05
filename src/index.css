@@ -60,6 +60,10 @@ header li{
     width: 2vw;
 }
 
+#logout {
+    transform: rotate(180deg);
+}
+
 .left{
    display: flex;
    flex-direction: column;
