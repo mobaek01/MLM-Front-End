@@ -19,26 +19,32 @@ const App = () => {
    const [currentUser, setCurrentUser] = useState('')
 
    const [loginAccepted, setLoginAccepted] = useState()
+   const [session, setSession] = useState()
 
 
 
 
 //================= on load ===============
+useEffect(() => {
+    localStorage.setItem('loginStatus', JSON.stringify(session))
+})
+
    useEffect(() => {
     axios
          .get('http://localhost:3001/chatrooms')
          .then((response) => {
-            // console.log(response);
-            // console.log(response.data);
             setMessages(response.data)
             })
     axios
         .get('http://localhost:3001/sessions')
         .then((response) => {
-            // console.log(response.data[0].loginAccepted);
-            // setLoginAccepted(response.data[0].loginAccepted)
+            setSession(response.data[0])
+            const status = localStorage.getItem('loginStatus')
+            setSession(JSON.parse(status))
         })
    },[])
+
+
 
 //==================Send Message Button=========
    const handleSendBtn= (event) => {
@@ -165,9 +171,9 @@ const App = () => {
          <header>
             <h1>MLM</h1>
             <ul>
-            {loginAccepted ?
+            {session ?
                 <>
-                <li className="headerTitle">Welcome {currentUser}</li>
+                <li className="headerTitle">Welcome {session.currentUser[0].username}</li>
                 <li><img id="logout" className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png" alt="" onClick={handleLogout}/></li>
                 <li><img className = "headerIcon" src = "https://cdn-icons.flaticon.com/png/512/880/premium/880543.png?token=exp=1636076955~hmac=56576c0ed7ab114c3007603f21651ec1" alt="" /></li>
                 </>
@@ -223,7 +229,7 @@ const App = () => {
             </div>
             <div className='right'>
                <Register/>
-               <LoginForm setCurrentUser={setCurrentUser} setLoginAccepted={setLoginAccepted}/>
+               <LoginForm setCurrentUser={setCurrentUser} setLoginAccepted={setLoginAccepted} />
                <Friend/>
             </div>
          </div>

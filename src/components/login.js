@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 
 
-const LoginForm = ({setCurrentUser, setLoginAccepted}) => {
+const LoginForm = ({setCurrentUser, setLoginAccepted, session}) => {
 //------------take the credentials from form --------------------
    const [username, setUsername] = useState('')
    const [password, setPassword] = useState('')
@@ -34,6 +34,7 @@ const LoginForm = ({setCurrentUser, setLoginAccepted}) => {
             console.log(username);
             setCurrentUser(username)
         })
+
   }
 
   // const handleLogin = () => {
