@@ -2,7 +2,7 @@ import './App.css';
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 import Register from './components/register.js'
-import Login from './components/login.js'
+import LoginForm from './components/login.js'
 
 
 const App = () => {
@@ -14,28 +14,21 @@ const App = () => {
    const [ editOn, seteditOn ] = useState(false)
    const [ targetAuthor, settargetAuthor ] = useState('')
    const [ targetMessage, settargetMessage ] = useState('')
+   const [currentUser, setCurrentUser] = useState({username:"", password:""})
 
 
-
-   const updateAuthor = (event) => {
-      setcreatedAuthor(event.target.value)
-      settargetAuthor(event.target.value)
-   }
-
-   const updateMessage = (event) => {
-      setcreatedMessage(event.target.value)
-      settargetMessage(event.target.value)
-   }
-
+//================= on load ===============
    useEffect(() => {
       axios
          .get('http://localhost:3001/chatrooms')
          .then((response) => {
             // console.log(response);
+            console.log(currentUser);
             setMessages(response.data)
          })
    },[])
 
+//==================Send Message Button=========
    const handleSendBtn= (event) => {
       event.preventDefault()
       axios.post('http://localhost:3001/chatrooms',
@@ -51,7 +44,7 @@ const App = () => {
             })
       })
    }
-
+//=============Delete message ===============
    const handleDelete = (message) => {
       axios
          .delete(`http://localhost:3001/chatrooms/${message._id}`)
@@ -62,6 +55,16 @@ const App = () => {
                   setMessages(response.data)
                })
          })
+   }
+
+//============= Edit message  =================
+   const updateAuthor = (event) => {
+      setcreatedAuthor(event.target.value)
+      settargetAuthor(event.target.value)
+   }
+   const updateMessage = (event) => {
+      setcreatedMessage(event.target.value)
+      settargetMessage(event.target.value)
    }
 
    const handleEditForm = (event) => {
@@ -100,10 +103,8 @@ const App = () => {
             })
       })
    }
-//=======----User-Registartion----===============
 
-
-//____________________________________________________________
+//__________________________________________________
    const handleLike = (message) => {
    }
 
@@ -112,8 +113,8 @@ const App = () => {
          <header>
             <h1>MLM</h1>
             <ul>
-                <li>Welcome</li>
-               <li>`Login`</li>
+                <li>Welcome {currentUser.username}</li>
+               <li>Login</li>
                <li>Register</li>
                <li>Friends</li>
             </ul>
@@ -155,7 +156,7 @@ const App = () => {
             </div>
             <div className='right'>
                <Register/>
-               <Login />
+               <LoginForm setCurrentUser={setCurrentUser}/>
             </div>
          </div>
          <footer>

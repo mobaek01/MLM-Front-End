@@ -2,27 +2,28 @@ import React from 'react'
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 
-const Login = () => {
 
-    const [currentUser, setCurrentUser] = React.useState({username:"", password:""})
-    const [username, setUsername] = React.useState('')
-    const [password, setPassword] = React.useState('')
+const LoginForm = ({setCurrentUser}) => {
+//------------take the credentials from form --------------------
+   const [username, setUsername] = useState('')
+   const [password, setPassword] = useState('')
 
-    const inputUsername = (event) => {
-        setUsername(event.target.value)
-    }
-    const inputPassword = (event) => {
-        setPassword(event.target.value)
-    }
 
-    const checkCred = (event) => {
-        event.preventDefault()
-        setCurrentUser({username:username, password: password})
-        axios
-            .get(`http://localhost:3001/sessions/${username}/${password}`)
-            .then(console.log('trying to log in'))
-    }
-
+   const inputUsername = (event) => {
+     setUsername(event.target.value)
+   }
+   const inputPassword = (event) => {
+      setPassword(event.target.value)
+   }
+//-----------check credentials---------------------------------
+  const checkCred = (event) => {
+      event.preventDefault()
+      setCurrentUser({username:username, password:password})
+      axios
+          .get(`http://localhost:3001/sessions/${username}/${password}`)
+          .then(console.log('checking credentials'))
+  }
+//---------------------------------------------------
    return (
       <>
          <h4>Log in</h4>
@@ -35,4 +36,4 @@ const Login = () => {
    )
 }
 
-export default Login
+export default LoginForm
