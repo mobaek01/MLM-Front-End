@@ -3,6 +3,7 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 import Register from './components/register.js'
 import LoginForm from './components/login.js'
+import Friend from './components/friend.js'
 
 
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
    const [ editOn, seteditOn ] = useState(false)
    const [ targetAuthor, settargetAuthor ] = useState('')
    const [ targetMessage, settargetMessage ] = useState('')
+   const [ like, setLike ] = useState()
    const [currentUser, setCurrentUser] = useState({username:"", password:""})
 
 
@@ -33,7 +35,7 @@ const App = () => {
       event.preventDefault()
       axios.post('http://localhost:3001/chatrooms',
          {
-            username:createdAuthor,
+            username:currentUser.username,
             message:createdMessage,
          }
       ).then(() => {
@@ -41,6 +43,7 @@ const App = () => {
             .get('http://localhost:3001/chatrooms')
             .then((response) => {
                setMessages(response.data)
+               setcreatedMessage('')
             })
       })
    }
@@ -106,6 +109,17 @@ const App = () => {
 
 //__________________________________________________
    const handleLike = (message) => {
+       settargetId(message._id)
+       axios
+        .put(`http://localhost:3001/chatrooms/${message._id}/likes`)
+        .then(() => {
+            axios
+            .get('http://localhost:3001/chatrooms')
+            .then((response) => {
+               // console.log(response);
+               setMessages(response.data)
+            })
+        })
    }
 
    return(
@@ -114,9 +128,9 @@ const App = () => {
             <h1>MLM</h1>
             <ul>
                 <li className="headerTitle">Welcome {currentUser.username}</li>
-                <li><img className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png"/></li>
-                <li><img className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1277/1277010.png"/></li>
-                <li><img className = "headerIcon" src = "https://cdn-icons.flaticon.com/png/512/880/premium/880543.png?token=exp=1636076955~hmac=56576c0ed7ab114c3007603f21651ec1"/></li>
+                <li><img className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png" alt="" /></li>
+                <li><img className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1277/1277010.png" alt="" /></li>
+                <li><img className = "headerIcon" src = "https://cdn-icons.flaticon.com/png/512/880/premium/880543.png?token=exp=1636076955~hmac=56576c0ed7ab114c3007603f21651ec1" alt="" /></li>
             </ul>
          </header>
          <div className='content'>
@@ -136,17 +150,24 @@ const App = () => {
                                  <input type='submit' value='send'/>
                               </form>
                            </div>):
-                           (<p>{message.message}</p>)
+                           (<>
+                               <p>{message.message}</p>
+
+                           </>)
                         }
                         </div>
                         <div className='cardLower'>
-                           <img src='./like.png' onClick={(event) => {
+                            <p>{message.likes} LIKES</p>
+                           <img id="likes" src='./like.png' alt="" onClick={(event) => {
                               handleLike(message)
                            }}/>
-                           <img src='./pencil.svg' onClick={ (event) => {
+                           <img src='./pencil.svg' alt="" onClick={ (event) => {
                               handleEditButton(message)
                            } }/>
-                           <img src='./xthin.png'  onClick={ (event) => {
+                           <img src='./xthin.png' alt="" onClick={ (event) => {
+                              handleDelete(message)
+                           } }/>
+                           <img src='https://cdn-icons.flaticon.com/png/512/3207/premium/3207048.png?token=exp=1636118701~hmac=f2a152612d2afc4c8be561f6948485e5' alt="" onClick={ (event) => {
                               handleDelete(message)
                            } }/>
                         </div>
@@ -157,12 +178,12 @@ const App = () => {
             <div className='right'>
                <Register/>
                <LoginForm setCurrentUser={setCurrentUser}/>
+               <Friend/>
             </div>
          </div>
          <footer>
-         <h4>Send a message...</h4>
          <form className='sendMsg' onSubmit={handleSendBtn}>
-            <span>Alias:</span><br/><input type='text' onChange={updateAuthor}/><br/>
+            <span>Sending as: {currentUser.username}</span><br/><input type="hidden" value={currentUser.username}/>
             <textarea onChange={updateMessage} /><br/>
             <input className = "button" type='submit' value='send'/>
          </form>
