@@ -113,10 +113,10 @@ const App = () => {
          <header>
             <h1>MLM</h1>
             <ul>
-                <li>Welcome {currentUser.username}</li>
-               <li>Login</li>
-               <li>Register</li>
-               <li>Friends</li>
+                <li className="headerTitle">Welcome {currentUser.username}</li>
+                <li><img className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png"/></li>
+                <li><img className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1277/1277010.png"/></li>
+                <li><img className = "headerIcon" src = "https://cdn-icons.flaticon.com/png/512/880/premium/880543.png?token=exp=1636076955~hmac=56576c0ed7ab114c3007603f21651ec1"/></li>
             </ul>
          </header>
          <div className='content'>
@@ -162,9 +162,9 @@ const App = () => {
          <footer>
          <h4>Send a message...</h4>
          <form className='sendMsg' onSubmit={handleSendBtn}>
-            Alias: <input type='text' onChange={updateAuthor}/><br/>
+            <span>Alias:</span><br/><input type='text' onChange={updateAuthor}/><br/>
             <textarea onChange={updateMessage} /><br/>
-            <input type='submit' value='send'/>
+            <input className = "button" type='submit' value='send'/>
          </form>
          </footer>
       </main>

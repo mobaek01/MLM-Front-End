@@ -29,7 +29,7 @@ const LoginForm = ({setCurrentUser}) => {
          <h4>Log in</h4>
          <form onSubmit={checkCred}>
             Username: <input type='text' onChange={inputUsername}/><br/>
-            Password: <input type='text' onChange={inputPassword}/><br/>
+            Password: <input type='password' onChange={inputPassword}/><br/>
             <input type='submit'/>
          </form>
       </>
