@@ -21,8 +21,6 @@ const App = () => {
    //Login/Logout
    const [currentUser, setCurrentUser] = useState('')
    const [loginAccepted, setLoginAccepted] = useState()
-   const [session, setSession] = useState()
-
 
    //likes
    const [ like, setLike ] = useState()
@@ -31,8 +29,10 @@ const App = () => {
    const [ showLogin, setShowLogin ] = useState(false)
    const [ showRegister, setShowRegister ] = useState(false)
 
+   //friends
    const [ friends, setFriends ] = useState([])
 
+//==========check for session=======================
    const checkForSession = (name) => {
       axios
          .get(`http://localhost:3001/sessions/find/${name}`)
@@ -47,6 +47,7 @@ const App = () => {
             }
          })
    }
+
 //================= on first load ===============
    useEffect(() => {
       const storedData = window.localStorage.getItem('currentUser')
@@ -57,14 +58,8 @@ const App = () => {
          .then((response) => {
             setMessages(response.data)
             })
-      axios
-        .get('http://localhost:3001/sessions')
-        .then((response) => {
-            // console.log(response.data[0].loginAccepted);
-            // setLoginAccepted(response.data[0].loginAccepted)
-        })
    },[])
-
+//-----------------------------------------------------
    useEffect(() => {//store name of user that logged in.
        window.localStorage.setItem('currentUser', currentUser);
    },[currentUser])
@@ -77,33 +72,12 @@ const App = () => {
       }
    },[currentUser])
 
-
-//================= on load ===============
-    useEffect(() => {
-        axios
-             .get('http://localhost:3001/chatrooms')
-             .then((response) => {
-                setMessages(response.data)
-                })
-        axios
-            .get('http://localhost:3001/sessions')
-            .then((response) => {
-                setSession(response.data[0])
-                const status = localStorage.getItem('loginStatus')
-                setSession(JSON.parse(status))
-            })
-   },[])
-
-   useEffect(() => {
-       localStorage.setItem('loginStatus', JSON.stringify(session))
-   })
-
 //==================Send Message Button=========
    const handleSendBtn= (event) => {
       event.preventDefault()
       axios.post('http://localhost:3001/chatrooms',
          {
-            username:currentUser.username,
+            username:currentUser,
             message:createdMessage,
          }
       ).then(() => {
@@ -190,22 +164,6 @@ const App = () => {
         })
    }
 //=======================Logout========================
-   // const handleLogout = () => {
-   //     axios
-   //      .get('http://localhost:3001/sessions')
-   //      .then((response) => {
-   //          axios.delete(`http://localhost:3001/sessions/${response.data[0].name}`)
-   //              .then((response) => {
-   //                  axios
-   //                  .get('http://localhost:3001/chatrooms')
-   //                  .then((response) => {
-   //                      setMessages(response.data)
-   //                      setCurrentUser('Guest')
-   //                  })
-   //              })
-   //      })
-   // }
-
    const handleLogout = () => {
       console.log(`loggin out ${currentUser} `);
        axios
@@ -217,7 +175,7 @@ const App = () => {
             setFriends([])
         })
    }
-
+//-------------------------------------------------------------
    const openLogin = () => {
        setShowLogin(true)
    }
@@ -297,12 +255,12 @@ const App = () => {
                <LoginForm setCurrentUser={setCurrentUser} setLoginAccepted={setLoginAccepted} setShowLogin={setShowLogin}/>
                :
                 <></>}
-               <Friend session={session} currentUser={currentUser} friends={friends}/>
+               <Friend currentUser={currentUser} friends={friends}/>
             </div>
          </div>
          <footer>
          <form className='sendMsg' onSubmit={handleSendBtn}>
-            <span >Sending as: {currentUser.username}</span><br/><input type="hidden" value={currentUser.username}/>
+            <span >Sending as: {currentUser}</span><br/><input type="hidden" value={currentUser}/>
             <textarea onChange={updateMessage} /><br/>
             <input className = "button" type='submit' value='send'/>
          </form>
