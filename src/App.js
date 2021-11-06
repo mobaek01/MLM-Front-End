@@ -27,14 +27,18 @@ const App = () => {
    //likes
    const [ like, setLike ] = useState()
 
+   //modal
    const [ showLogin, setShowLogin ] = useState(false)
    const [ showRegister, setShowRegister ] = useState(false)
+
+   const [ friends, setFriends ] = useState([])
 
    const checkForSession = (name) => {
       axios
          .get(`http://localhost:3001/sessions/find/${name}`)
          .then((response) => {
-            console.log(response);
+            setFriends(response.data.currentUser[0].friends)
+            console.log(response.data);
             if (response.data.loginAccepted===true){
                // setCurrentUser(name)
                return true
@@ -71,7 +75,7 @@ const App = () => {
          setCurrentUser(storedData)
          console.log(currentUser);
       }
-   })
+   },[currentUser])
 
 
 //================= on load ===============
@@ -209,7 +213,8 @@ const App = () => {
         .then((response) => {
             console.log('you are logged out');
             window.localStorage.removeItem('currentUser');
-            setCurrentUser('')
+            setCurrentUser('Guest')
+            setFriends([])
         })
    }
 
@@ -226,19 +231,18 @@ const App = () => {
          <header>
             <h1>MLM</h1>
             <ul>
+            <li className="headerTitle">Welcome {currentUser}</li>
 
-            {currentUser ?
-
-                <>
-                <li className="headerTitle">Welcome {session.currentUser[0].username}</li>
-                <li><img id="logout" className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png" alt="" onClick={handleLogout}/></li>
-                <li><img className = "headerIcon" src = "https://cdn-icons.flaticon.com/png/512/880/premium/880543.png?token=exp=1636076955~hmac=56576c0ed7ab114c3007603f21651ec1" alt="" /></li>
-                </>
+            {currentUser=='Guest'?
+               <>
+               <li><img onClick={openLogin} className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png" alt="" /></li>
+               <li><img onClick={openRegister} className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1277/1277010.png" alt="" /></li>
+               </>
             :
-                <>
-                <li><img onClick={openLogin} className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png" alt="" /></li>
-                <li><img onClick={openRegister} className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1277/1277010.png" alt="" /></li>
-                </>
+            <>
+            <li><img id="logout" className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png" alt="" onClick={handleLogout}/></li>
+            <li>Friends</li>
+            </>
             }
             </ul>
          </header>
@@ -293,7 +297,7 @@ const App = () => {
                <LoginForm setCurrentUser={setCurrentUser} setLoginAccepted={setLoginAccepted} setShowLogin={setShowLogin}/>
                :
                 <></>}
-               <Friend session={session}/>
+               <Friend session={session} currentUser={currentUser} friends={friends}/>
             </div>
          </div>
          <footer>

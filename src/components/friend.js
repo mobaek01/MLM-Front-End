@@ -2,19 +2,18 @@ import React from 'react'
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 
-const Friend = ({session}) => {
+const Friend = ({session, currentUser, friends}) => {
 
-    const [ friends, setFriends ] = useState([])
-    console.log(friends);
 
-    useEffect(() => {
-        axios
-            .get('http://localhost:3001/sessions')
-            .then((response) => {
-                setFriends(response.data[0].currentUser[0].friends)
-            })
-    },[])
-
+    // console.log(friends);
+    // useEffect(() => {
+    //     axios
+    //         .get(`http://localhost:3001/sessions/friends/${currentUser}`)
+    //         .then((response) => {
+    //               console.log('line 13 friends'+response.data);
+    //             setFriends(response.data[0].currentUser[0].friends)
+    //         })
+    // },[])
 
 
     return (
