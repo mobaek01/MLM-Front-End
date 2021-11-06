@@ -7,22 +7,71 @@ import Friend from './components/friend.js'
 
 
 const App = () => {
-
+   //messaging
    const [ messages, setMessages ] = useState([])
    const [ createdAuthor, setcreatedAuthor ] = useState('')
    const [createdMessage, setcreatedMessage ] = useState('')
+
+   //edit message
    const [ targetId, settargetId ] = useState('')
    const [ editOn, seteditOn ] = useState(false)
    const [ targetAuthor, settargetAuthor ] = useState('')
    const [ targetMessage, settargetMessage ] = useState('')
-   const [ like, setLike ] = useState()
-   const [currentUser, setCurrentUser] = useState('')
 
+   //Login/Logout
+   const [currentUser, setCurrentUser] = useState('')
    const [loginAccepted, setLoginAccepted] = useState()
    const [session, setSession] = useState()
 
+
+   //likes
+   const [ like, setLike ] = useState()
+
    const [ showLogin, setShowLogin ] = useState(false)
    const [ showRegister, setShowRegister ] = useState(false)
+
+   const checkForSession = (name) => {
+      axios
+         .get(`http://localhost:3001/sessions/find/${name}`)
+         .then((response) => {
+            console.log(response);
+            if (response.data.loginAccepted===true){
+               // setCurrentUser(name)
+               return true
+            } else {
+               return false
+            }
+         })
+   }
+//================= on first load ===============
+   useEffect(() => {
+      const storedData = window.localStorage.getItem('currentUser')
+      setCurrentUser(storedData||'');
+      checkForSession(currentUser)
+      axios
+         .get('http://localhost:3001/chatrooms')
+         .then((response) => {
+            setMessages(response.data)
+            })
+      axios
+        .get('http://localhost:3001/sessions')
+        .then((response) => {
+            // console.log(response.data[0].loginAccepted);
+            // setLoginAccepted(response.data[0].loginAccepted)
+        })
+   },[])
+
+   useEffect(() => {//store name of user that logged in.
+       window.localStorage.setItem('currentUser', currentUser);
+   },[currentUser])
+
+   useEffect(() => {
+      const storedData = window.localStorage.getItem('currentUser')
+      if(checkForSession(currentUser)==true){
+         setCurrentUser(storedData)
+         console.log(currentUser);
+      }
+   })
 
 
 //================= on load ===============
@@ -136,35 +185,33 @@ const App = () => {
             })
         })
    }
-
-   const handleLogout = () => {
-       axios
-        .get('http://localhost:3001/sessions')
-        .then((response) => {
-            axios.delete(`http://localhost:3001/sessions/${response.data[0].name}`)
-                .then((response) => {
-                    axios
-                    .get('http://localhost:3001/chatrooms')
-                    .then((response) => {
-                        setMessages(response.data)
-                        setLoginAccepted(false)
-                    })
-                })
-            localStorage.removeItem('loginStatus')
-        })
-   }
-
+//=======================Logout========================
    // const handleLogout = () => {
    //     axios
-   //      .get('http://localhost:3001/users')
+   //      .get('http://localhost:3001/sessions')
    //      .then((response) => {
-   //          axios
-   //          .put(`http://localhost:3001/users/logout/${response.data.username}`)
-   //          .then(() => {
-   //              console.log('you are logged out');
-   //          })
+   //          axios.delete(`http://localhost:3001/sessions/${response.data[0].name}`)
+   //              .then((response) => {
+   //                  axios
+   //                  .get('http://localhost:3001/chatrooms')
+   //                  .then((response) => {
+   //                      setMessages(response.data)
+   //                      setCurrentUser('Guest')
+   //                  })
+   //              })
    //      })
    // }
+
+   const handleLogout = () => {
+      console.log(`loggin out ${currentUser} `);
+       axios
+        .delete(`http://localhost:3001/sessions/${currentUser}`)
+        .then((response) => {
+            console.log('you are logged out');
+            window.localStorage.removeItem('currentUser');
+            setCurrentUser('')
+        })
+   }
 
    const openLogin = () => {
        setShowLogin(true)
@@ -179,7 +226,9 @@ const App = () => {
          <header>
             <h1>MLM</h1>
             <ul>
-            {session ?
+
+            {currentUser ?
+
                 <>
                 <li className="headerTitle">Welcome {session.currentUser[0].username}</li>
                 <li><img id="logout" className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png" alt="" onClick={handleLogout}/></li>
