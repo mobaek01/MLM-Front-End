@@ -75,7 +75,7 @@ header li{
 }
 
 .card{
-   border-bottom: 1px solid grey;
+   border: 1px solid grey;
    padding-left: 2em;
 }
 
@@ -202,4 +202,15 @@ footer{
 .modalClose {
     width: 20%;
     margin-top: 30%;
+}
+
+.friendList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    border: 1px solid grey;
+    margin-left: 1%;
+    width: 24vw;
+    height: 100%;
 }
