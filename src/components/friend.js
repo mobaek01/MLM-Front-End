@@ -1,8 +1,9 @@
 import React from 'react'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import axios from 'axios'
 
-const Friend = () => {
+const Friend = ({session}) => {
+
     return (
         <>
             <h4>Friends List</h4>
