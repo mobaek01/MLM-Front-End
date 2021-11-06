@@ -31,6 +31,7 @@ const App = () => {
 
    //friends
    const [ friends, setFriends ] = useState([])
+   const [ targetFriend, setTargetFriend ] = useState('')
 
 //==========check for session=======================
    const checkForSession = (name) => {
@@ -51,7 +52,7 @@ const App = () => {
 //================= on first load ===============
    useEffect(() => {
       const storedData = window.localStorage.getItem('currentUser')
-      setCurrentUser(storedData||'');
+      setCurrentUser(storedData||'Guest');
       checkForSession(currentUser)
       axios
          .get('http://localhost:3001/chatrooms')
@@ -238,9 +239,6 @@ const App = () => {
                            <img src='./xthin.png' alt="" onClick={ (event) => {
                               handleDelete(message)
                            } }/>
-                           <img src='https://cdn-icons.flaticon.com/png/512/3207/premium/3207048.png?token=exp=1636118701~hmac=f2a152612d2afc4c8be561f6948485e5' alt="" onClick={ (event) => {
-                              handleDelete(message)
-                           } }/>
                         </div>
                      </div>
                   )
@@ -255,7 +253,7 @@ const App = () => {
                <LoginForm setCurrentUser={setCurrentUser} setLoginAccepted={setLoginAccepted} setShowLogin={setShowLogin}/>
                :
                 <></>}
-               <Friend currentUser={currentUser} friends={friends}/>
+               <Friend currentUser={currentUser} friends={friends} setFriends={setFriends} targetFriend={targetFriend} setTargetFriend={setTargetFriend}/>
             </div>
          </div>
          <footer>
