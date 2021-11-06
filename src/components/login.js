@@ -10,30 +10,28 @@ const LoginForm = ({setCurrentUser, setLoginAccepted}) => {
    const [online, setOnline] = useState(true)
 
 
-
-
-   const inputUsername = (event) => {
-     setUsername(event.target.value)
+   const inputUsername = (event) => {//updates value on input change
+      setUsername(event.target.value)
    }
-   const inputPassword = (event) => {
+   const inputPassword = (event) => {//updates value on input change
       setPassword(event.target.value)
    }
-//-----------check credentials---------------------------------
-  const handleLogin = (event) => {
+//-----------On login---------------------------------
+   const handleLogin = (event) => {
       event.preventDefault()
-      axios
-          .get(`http://localhost:3001/sessions/${username}/${password}`)
-          .then(() => {
-              console.log('checking credentials');
-          })
-    axios
-        .post(`http://localhost:3001/sessions/${username}`)
-        .then(() => {
-            console.log('session created');
+      axios //pass login credentials to get checked.
+         .get(`http://localhost:3001/sessions/login/${username}/${password}`)
+         .then(() => {
+            console.log('sending credentials');
+         })
+      axios//pass name of session to create.
+         .post(`http://localhost:3001/sessions/${username}`)
+         .then(() => {
+            console.log('Trying to create session');
             setLoginAccepted(true)
-            console.log(username);
+            console.log(`setting current username to ${username}`);
             setCurrentUser(username)
-        })
+         })
   }
 
   // const handleLogin = () => {

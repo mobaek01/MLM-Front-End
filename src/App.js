@@ -7,38 +7,58 @@ import Friend from './components/friend.js'
 
 
 const App = () => {
-
+   //messaging
    const [ messages, setMessages ] = useState([])
    const [ createdAuthor, setcreatedAuthor ] = useState('')
    const [createdMessage, setcreatedMessage ] = useState('')
+
+   //edit message
    const [ targetId, settargetId ] = useState('')
    const [ editOn, seteditOn ] = useState(false)
    const [ targetAuthor, settargetAuthor ] = useState('')
    const [ targetMessage, settargetMessage ] = useState('')
-   const [ like, setLike ] = useState()
-   const [currentUser, setCurrentUser] = useState('')
 
+   //Login/Logout
+   const [currentUser, setCurrentUser] = useState('')
    const [loginAccepted, setLoginAccepted] = useState()
 
+   //likes
+   const [ like, setLike ] = useState()
 
 
 
-//================= on load ===============
+   const checkForSession = (name) => {
+      axios
+         .get(`http://localhost:3001/sessions/find/${name}`)
+         .then((response) => {
+            console.log(response);
+            if (response.data.loginAccepted===true){
+               // setCurrentUser(name)
+               return true
+            } else {
+               return false
+            }
+         })
+   }
+//================= on first load ===============
    useEffect(() => {
-    axios
+      checkForSession('lorens1')
+      axios
          .get('http://localhost:3001/chatrooms')
          .then((response) => {
-            // console.log(response);
-            // console.log(response.data);
             setMessages(response.data)
             })
-    axios
+      axios
         .get('http://localhost:3001/sessions')
         .then((response) => {
             // console.log(response.data[0].loginAccepted);
             // setLoginAccepted(response.data[0].loginAccepted)
         })
    },[])
+
+   useEffect(() => {
+      checkForSession('lorens1')
+   })
 
 //==================Send Message Button=========
    const handleSendBtn= (event) => {
@@ -131,7 +151,7 @@ const App = () => {
             })
         })
    }
-
+//=======================Logout========================
    const handleLogout = () => {
        axios
         .get('http://localhost:3001/sessions')
