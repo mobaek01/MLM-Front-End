@@ -21,11 +21,14 @@ const App = () => {
    //Login/Logout
    const [currentUser, setCurrentUser] = useState('')
    const [loginAccepted, setLoginAccepted] = useState()
+   const [session, setSession] = useState()
+
 
    //likes
    const [ like, setLike ] = useState()
 
-
+   const [ showLogin, setShowLogin ] = useState(false)
+   const [ showRegister, setShowRegister ] = useState(false)
 
    const checkForSession = (name) => {
       axios
@@ -69,6 +72,28 @@ const App = () => {
          console.log(currentUser);
       }
    })
+
+
+//================= on load ===============
+    useEffect(() => {
+        axios
+             .get('http://localhost:3001/chatrooms')
+             .then((response) => {
+                setMessages(response.data)
+                })
+        axios
+            .get('http://localhost:3001/sessions')
+            .then((response) => {
+                setSession(response.data[0])
+                const status = localStorage.getItem('loginStatus')
+                setSession(JSON.parse(status))
+            })
+   },[])
+
+   useEffect(() => {
+       localStorage.setItem('loginStatus', JSON.stringify(session))
+   })
+
 //==================Send Message Button=========
    const handleSendBtn= (event) => {
       event.preventDefault()
@@ -188,21 +213,31 @@ const App = () => {
         })
    }
 
+   const openLogin = () => {
+       setShowLogin(true)
+   }
+
+   const openRegister = () => {
+       setShowRegister(true)
+   }
+
    return(
       <main>
          <header>
             <h1>MLM</h1>
             <ul>
+
             {currentUser ?
+
                 <>
-                <li className="headerTitle">Welcome {currentUser}</li>
+                <li className="headerTitle">Welcome {session.currentUser[0].username}</li>
                 <li><img id="logout" className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png" alt="" onClick={handleLogout}/></li>
                 <li><img className = "headerIcon" src = "https://cdn-icons.flaticon.com/png/512/880/premium/880543.png?token=exp=1636076955~hmac=56576c0ed7ab114c3007603f21651ec1" alt="" /></li>
                 </>
             :
                 <>
-                <li><img className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png" alt="" /></li>
-                <li><img className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1277/1277010.png" alt="" /></li>
+                <li><img onClick={openLogin} className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png" alt="" /></li>
+                <li><img onClick={openRegister} className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1277/1277010.png" alt="" /></li>
                 </>
             }
             </ul>
@@ -250,14 +285,20 @@ const App = () => {
                })}
             </div>
             <div className='right'>
-               <Register/>
-               <LoginForm setCurrentUser={setCurrentUser} setLoginAccepted={setLoginAccepted}/>
-               <Friend/>
+                {showRegister ?
+                <Register setShowRegister={setShowRegister}/>
+                :
+                <></>}
+               {showLogin ?
+               <LoginForm setCurrentUser={setCurrentUser} setLoginAccepted={setLoginAccepted} setShowLogin={setShowLogin}/>
+               :
+                <></>}
+               <Friend session={session}/>
             </div>
          </div>
          <footer>
          <form className='sendMsg' onSubmit={handleSendBtn}>
-            <span>Sending as: {currentUser.username}</span><br/><input type="hidden" value={currentUser.username}/>
+            <span >Sending as: {currentUser.username}</span><br/><input type="hidden" value={currentUser.username}/>
             <textarea onChange={updateMessage} /><br/>
             <input className = "button" type='submit' value='send'/>
          </form>

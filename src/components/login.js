@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 
 
-const LoginForm = ({setCurrentUser, setLoginAccepted}) => {
+const LoginForm = ({setCurrentUser, setLoginAccepted, session, setShowLogin}) => {
 //------------take the credentials from form --------------------
    const [username, setUsername] = useState('')
    const [password, setPassword] = useState('')
@@ -47,17 +47,23 @@ const LoginForm = ({setCurrentUser, setLoginAccepted}) => {
   //      })
   // }
 
+  const closeLogin = () => {
+      setShowLogin(false)
+  }
 
 //---------------------------------------------------
    return (
-      <>
-         <h4>Log in</h4>
-         <form onSubmit={handleLogin}>
-            Username: <input type='text' onChange={inputUsername}/><br/>
-            Password: <input type='password' onChange={inputPassword}/><br/>
-            <input type='submit'/>
-         </form>
-      </>
+      <div className="loginForm">
+        <div className = "loginModalForm">
+         <h2>Log in</h2>
+             <form onSubmit={handleLogin}>
+                Username: <input className="inputField" type='text' onChange={inputUsername}/><br/>
+                Password: <input className="inputField" type='password' onChange={inputPassword}/><br/>
+                <input type='submit'/>
+             </form>
+             <button className="modalClose" onClick={closeLogin}>CLOSE</button>
+         </div>
+      </div>
    )
 }
 
