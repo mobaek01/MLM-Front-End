@@ -42,7 +42,9 @@ const App = () => {
    }
 //================= on first load ===============
    useEffect(() => {
-      checkForSession('lorens1')
+      const storedData = window.localStorage.getItem('currentUser')
+      setCurrentUser(storedData||'');
+      checkForSession(currentUser)
       axios
          .get('http://localhost:3001/chatrooms')
          .then((response) => {
@@ -56,10 +58,17 @@ const App = () => {
         })
    },[])
 
-   useEffect(() => {
-      checkForSession('lorens1')
-   })
+   useEffect(() => {//store name of user that logged in.
+       window.localStorage.setItem('currentUser', currentUser);
+   },[currentUser])
 
+   useEffect(() => {
+      const storedData = window.localStorage.getItem('currentUser')
+      if(checkForSession(currentUser)==true){
+         setCurrentUser(storedData)
+         console.log(currentUser);
+      }
+   })
 //==================Send Message Button=========
    const handleSendBtn= (event) => {
       event.preventDefault()
@@ -152,40 +161,39 @@ const App = () => {
         })
    }
 //=======================Logout========================
-   const handleLogout = () => {
-       axios
-        .get('http://localhost:3001/sessions')
-        .then((response) => {
-            axios.delete(`http://localhost:3001/sessions/${response.data[0].name}`)
-                .then((response) => {
-                    axios
-                    .get('http://localhost:3001/chatrooms')
-                    .then((response) => {
-                        setMessages(response.data)
-                        setLoginAccepted(false)
-                    })
-                })
-        })
-   }
-
    // const handleLogout = () => {
    //     axios
-   //      .get('http://localhost:3001/users')
+   //      .get('http://localhost:3001/sessions')
    //      .then((response) => {
-   //          axios
-   //          .put(`http://localhost:3001/users/logout/${response.data.username}`)
-   //          .then(() => {
-   //              console.log('you are logged out');
-   //          })
+   //          axios.delete(`http://localhost:3001/sessions/${response.data[0].name}`)
+   //              .then((response) => {
+   //                  axios
+   //                  .get('http://localhost:3001/chatrooms')
+   //                  .then((response) => {
+   //                      setMessages(response.data)
+   //                      setCurrentUser('Guest')
+   //                  })
+   //              })
    //      })
    // }
+
+   const handleLogout = () => {
+      console.log(`loggin out ${currentUser} `);
+       axios
+        .delete(`http://localhost:3001/sessions/${currentUser}`)
+        .then((response) => {
+            console.log('you are logged out');
+            window.localStorage.removeItem('currentUser');
+            setCurrentUser('')
+        })
+   }
 
    return(
       <main>
          <header>
             <h1>MLM</h1>
             <ul>
-            {loginAccepted ?
+            {currentUser ?
                 <>
                 <li className="headerTitle">Welcome {currentUser}</li>
                 <li><img id="logout" className = "headerIcon" src = "https://cdn-icons-png.flaticon.com/512/1828/1828395.png" alt="" onClick={handleLogout}/></li>
